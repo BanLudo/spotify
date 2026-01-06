@@ -1,4 +1,6 @@
 package spotify_clone.demo.catalogcontext.application.vo;
 
-public record SongTitleVO() {
+import jakarta.validation.constraints.NotBlank;
+
+public record SongTitleVO(@NotBlank String value) {
 }

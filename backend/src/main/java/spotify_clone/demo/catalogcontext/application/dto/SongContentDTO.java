@@ -1,4 +1,8 @@
 package spotify_clone.demo.catalogcontext.application.dto;
 
-public record SongContentDTO() {
+import jakarta.persistence.Lob;
+
+import java.util.UUID;
+
+public record SongContentDTO(UUID publicId, @Lob byte[] file, String fileContentType) {
 }

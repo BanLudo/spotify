@@ -1,4 +1,8 @@
 package spotify_clone.demo.catalogcontext.repository;
 
-public interface SongContentRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import spotify_clone.demo.catalogcontext.domain.SongContent;
+
+
+public interface SongContentRepository extends JpaRepository<SongContent, Long> {
 }
