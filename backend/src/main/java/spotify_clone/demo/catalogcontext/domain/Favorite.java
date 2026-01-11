@@ -8,8 +8,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "favorite_song")
-@IdClass(FavoriteId.class) //clé primaire composée de plusieurs champs
-public class Favorite implements Serializable { //unicité couple (song, user)
+@IdClass(FavoriteId.class) //clé primaire composée de plusieurs champs (songPublicId, userEmail)
+public class Favorite implements Serializable { //unicité couple (song, user) - Un utilisateur peut mettre une chanson en favori une seule fois.
 
     @Id
     private UUID songPublicId; //id public de la chanson
