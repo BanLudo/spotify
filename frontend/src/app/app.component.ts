@@ -5,6 +5,8 @@ import { fontAwesomeIcons } from "./shared/font-awesome-icons";
 import { NavigationComponent } from "./layout/navigation/navigation.component";
 import { LibraryComponent } from "./layout/library/library.component";
 import { HeaderComponent } from "./layout/header/header.component";
+import { ToastService } from "./services/toast.service";
+import { NgbToast } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
 	selector: "app-root",
@@ -15,6 +17,7 @@ import { HeaderComponent } from "./layout/header/header.component";
 		NavigationComponent,
 		LibraryComponent,
 		HeaderComponent,
+		NgbToast,
 	],
 	templateUrl: "./app.component.html",
 	styleUrl: "./app.component.scss",
@@ -23,9 +26,11 @@ export class AppComponent implements OnInit {
 	title: string = "frontend";
 
 	private faIconLibrary = inject(FaIconLibrary);
+	toastService = inject(ToastService);
 
 	ngOnInit(): void {
 		this.initFontAwesome();
+		this.toastService.show("Hello Toast", "DANGER");
 	}
 	private initFontAwesome() {
 		this.faIconLibrary.addIcons(...fontAwesomeIcons);

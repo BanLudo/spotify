@@ -4,7 +4,7 @@ import { computed, inject, Injectable, signal, WritableSignal } from "@angular/c
 import { State } from "./model/state.model";
 import { User } from "./model/user.model";
 import { environment } from "../../environments/environment.development";
-import { Observable, tap } from "rxjs";
+import { delay, Observable, of, tap } from "rxjs";
 
 @Injectable({
 	providedIn: "root",
@@ -13,6 +13,10 @@ export class AuthService {
 	http: HttpClient = inject(HttpClient);
 	location: Location = inject(Location);
 	notConnected: string = "NOT_CONNECTED";
+
+	/*-----------------------------------*/
+	mockbackend: boolean = true; //active le mock simule un appel backend
+	/*---------------------------------------*/
 
 	// signal pour stocker l'état utilisateur
 	private fetchUser$: WritableSignal<State<User, HttpErrorResponse>> = signal(
@@ -24,6 +28,17 @@ export class AuthService {
 	 * Méthode fetch() existante, utilisée par HeaderComponent etc.
 	 * ------------------------------- */
 	fetch(): void {
+		if (this.mockbackend) {
+			//simule un appel backend
+			of({ email: "mockuser@example.com" } as User)
+				.pipe(delay(200))
+				.subscribe((user) => {
+					this.fetchUser$.set(State.Builder<User, HttpErrorResponse>().forSuccess(user).build());
+				});
+			return;
+		}
+
+		//vrai backend à remettre
 		this.http.get<User>(`${environment.API_URL}/api/get-authenticated-user`).subscribe({
 			next: (user: User) =>
 				this.fetchUser$.set(State.Builder<User, HttpErrorResponse>().forSuccess(user).build()),
