@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import spotify_clone.demo.catalogcontext.application.vo.SongAuthorVO;
 import spotify_clone.demo.catalogcontext.application.vo.SongTitleVO;
 
-public record SaveSongDTO(@Valid SongTitleVO songTitleVO,
-                          @Valid SongAuthorVO songAuthorVO,
+public record SaveSongDTO(@Valid SongTitleVO title,
+                          @Valid SongAuthorVO author,
                           @NotNull byte[] cover,
                           @NotNull String coverContentType,
                           @NotNull byte[] file,
