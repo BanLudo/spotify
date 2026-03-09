@@ -1,0 +1,12 @@
+<div class="d-flex w-100">
+	<img
+		height="55px"
+		width="55px"
+		class="rounded-2"
+		[src]="'data:' + song().coverContentType + ';base64,' + song().cover" />
+
+	<div class="d-flex flex-column justify-content-center ms-2">
+		<div class="mb-1 title">{{ song().title!.value }}</div>
+		<div class="author">{{ song().author!.value }}</div>
+	</div>
+</div>

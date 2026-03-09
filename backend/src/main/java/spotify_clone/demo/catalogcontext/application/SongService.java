@@ -11,6 +11,8 @@ import spotify_clone.demo.catalogcontext.domain.SongContent;
 import spotify_clone.demo.catalogcontext.repository.SongContentRepository;
 import spotify_clone.demo.catalogcontext.repository.SongRepository;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class SongService {
@@ -38,4 +40,12 @@ public class SongService {
         songContentRepository.save(songContent);
         return songMapper.songToReadSongInfoDTO(songSaved);
     }
+
+    @Transactional
+    public List<ReadSongInfoDTO> getAll(){
+        return songRepository.findAll().stream()
+                    .map(songMapper::songToReadSongInfoDTO)
+                    .toList();
+    }
+
 }

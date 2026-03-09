@@ -7,17 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import spotify_clone.demo.catalogcontext.application.SongService;
 import spotify_clone.demo.catalogcontext.application.dto.ReadSongInfoDTO;
 import spotify_clone.demo.catalogcontext.application.dto.SaveSongDTO;
+import spotify_clone.demo.catalogcontext.application.dto.SongContentDTO;
 import spotify_clone.demo.usercontext.application.UserService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,6 +56,11 @@ public class SongRessource {
         }else {
             return ResponseEntity.ok(songService.create(saveSongDTO));
         }
-
     }
+
+    @GetMapping("/songs")
+    public ResponseEntity<List<ReadSongInfoDTO>> getAll(){
+        return ResponseEntity.ok(songService.getAll());
+    }
+
 }
