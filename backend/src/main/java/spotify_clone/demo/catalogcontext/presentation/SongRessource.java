@@ -17,7 +17,9 @@ import spotify_clone.demo.usercontext.application.UserService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -61,6 +63,18 @@ public class SongRessource {
     @GetMapping("/songs")
     public ResponseEntity<List<ReadSongInfoDTO>> getAll(){
         return ResponseEntity.ok(songService.getAll());
+    }
+
+    @GetMapping("/songs/get-content")
+    public ResponseEntity<SongContentDTO> getOneByPublicId(@RequestPart UUID publicId){
+        Optional<SongContentDTO> songContentByPublicId = songService.getOneByPublicId(publicId);
+        return songContentByPublicId.map(ResponseEntity::ok)
+                                    .orElseGet(() -> ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "UUID unknown")).build());
+    }
+
+    @GetMapping("/songs/search")
+    public ResponseEntity<List<ReadSongInfoDTO>> search(@RequestParam String term){
+        return ResponseEntity.ok(songService.search(term));
     }
 
 }

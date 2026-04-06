@@ -6,6 +6,8 @@ import { User } from "./model/user.model";
 import { environment } from "../../environments/environment.development";
 import { delay, Observable, of, tap } from "rxjs";
 
+export type AuthPopupState = "OPEN" | "CLOSE";
+
 @Injectable({
 	providedIn: "root",
 })
@@ -23,6 +25,9 @@ export class AuthService {
 		State.Builder<User, HttpErrorResponse>().forSuccess({ email: this.notConnected }).build()
 	);
 	fetchUser = computed(() => this.fetchUser$());
+
+	private triggerAuthPopup$: WritableSignal<AuthPopupState> = signal("CLOSE");
+	authPopupStageChange = computed(() => this.triggerAuthPopup$());
 
 	/** -------------------------------
 	 * Méthode fetch() existante, utilisée par HeaderComponent etc.
@@ -111,6 +116,10 @@ export class AuthService {
 			},
 			error: (err) => console.error("Logout failed", err),
 		});
+	}
+
+	openOrCloseAuthPopup(state: AuthPopupState): void {
+		this.triggerAuthPopup$.set(state);
 	}
 
 	/*

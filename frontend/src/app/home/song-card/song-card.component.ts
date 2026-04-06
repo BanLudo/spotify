@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from "@angular/animations";
-import { Component, input, InputSignal, OnInit } from "@angular/core";
+import { Component, EventEmitter, input, InputSignal, OnInit, Output, output } from "@angular/core";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { ReadSong } from "../../services/model/song.model";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -26,6 +26,8 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
 export class SongCardComponent implements OnInit {
 	song: InputSignal<ReadSong> = input.required<ReadSong>();
 
+	@Output() songToPlay$: EventEmitter<ReadSong> = new EventEmitter<ReadSong>();
+
 	songDisplay: ReadSong = {
 		favorite: false,
 		displayPlay: false,
@@ -37,5 +39,9 @@ export class SongCardComponent implements OnInit {
 
 	onHoverPlay(displayIcon: boolean): void {
 		this.songDisplay.displayPlay = displayIcon;
+	}
+
+	play(): void {
+		this.songToPlay$.emit(this.songDisplay);
 	}
 }
