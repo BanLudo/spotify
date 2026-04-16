@@ -1,4 +1,12 @@
 <h1 class="mb-3 mt-3">Good morning</h1>
+
+@if (isLoading) {
+<div class="d-flex justify-content-center align-items-center">
+	<div class="spinner-grow text-primary loader" role="status">
+		<span class="visually-hidden">Loading..</span>
+	</div>
+</div>
+}@else {
 <div class="d-flex flex-wrap">
 	@for (song of allSongs; track song.publicId) {
 	<app-song-card
@@ -7,3 +15,4 @@
 		(songToPlay$)="onPlaySong($event)"></app-song-card>
 	}
 </div>
+}
