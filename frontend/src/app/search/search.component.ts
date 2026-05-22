@@ -82,7 +82,7 @@ export class SearchComponent {
 	isSearching = signal(false);
 
 	constructor() {
-		toObservable(this.searchTerm)
+		toObservable(this.searchTerm) // transform le signal en observable
 			.pipe(
 				tap((term: string) => {
 					if (term.length === 0) {
@@ -92,7 +92,7 @@ export class SearchComponent {
 				}),
 				filter((term: string) => term.length > 0),
 				debounceTime(300),
-				distinctUntilChanged(),
+				distinctUntilChanged(), //empeche les doublons consécutifs
 				tap(() => this.isSearching.set(true)),
 				switchMap((term: string) => this.songService.search(term)),
 				takeUntilDestroyed()

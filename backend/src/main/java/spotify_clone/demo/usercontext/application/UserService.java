@@ -62,6 +62,11 @@ public class UserService {
         return userMapper.readUserDTOToUser(user);
     }
 
+    public Optional<ReadUserDTO> getByEmail(String email){
+        Optional<User> oneByEmail = userRepository.findOneByEmail(email);
+        return oneByEmail.map(userMapper::readUserDTOToUser);
+    }
+
     private void updateUser(User user) {
         Optional<User> userToUpdateOptional = userRepository.findOneByEmail(user.getEmail());
         if (userToUpdateOptional.isPresent()) {
@@ -107,5 +112,9 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public boolean isAuthenticated() {
+        return !SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser");
     }
 }

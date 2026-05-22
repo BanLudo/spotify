@@ -2,6 +2,7 @@ package spotify_clone.demo.catalogcontext.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,9 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import spotify_clone.demo.catalogcontext.application.SongService;
+import spotify_clone.demo.catalogcontext.application.dto.FavoriteSongDTO;
 import spotify_clone.demo.catalogcontext.application.dto.ReadSongInfoDTO;
 import spotify_clone.demo.catalogcontext.application.dto.SaveSongDTO;
 import spotify_clone.demo.catalogcontext.application.dto.SongContentDTO;
+import spotify_clone.demo.catalogcontext.domain.Favorite;
+import spotify_clone.demo.infrastructure.service.dto.State;
+import spotify_clone.demo.infrastructure.service.dto.StatusNotification;
+import spotify_clone.demo.usercontext.ReadUserDTO;
 import spotify_clone.demo.usercontext.application.UserService;
 
 import java.io.IOException;
@@ -75,6 +81,25 @@ public class SongRessource {
     @GetMapping("/songs/search")
     public ResponseEntity<List<ReadSongInfoDTO>> search(@RequestParam String term){
         return ResponseEntity.ok(songService.search(term));
+    }
+
+    @PostMapping("/songs/like")
+    public ResponseEntity<FavoriteSongDTO> addOrRemoveFromFavorite(@Valid @RequestBody FavoriteSongDTO favoriteSongDTO){
+        ReadUserDTO userFromAuthentication = userService.getAuthenticatedUserFromSecurityContext();
+        State<FavoriteSongDTO, String> favoriteSongResponse = songService.addOrRemoveFromFavorite(favoriteSongDTO, userFromAuthentication.email());
+
+        if(favoriteSongResponse.getStatus().equals(StatusNotification.ERROR)){
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, favoriteSongResponse.getError());
+            return ResponseEntity.of(problemDetail).build();
+        }else {
+            return ResponseEntity.ok(favoriteSongResponse.getValue());
+        }
+    }
+
+    @GetMapping("/songs/like")
+    public ResponseEntity<List<ReadSongInfoDTO>> fetchFavoriteSongs(){
+        ReadUserDTO userFromAuthentication = userService.getAuthenticatedUserFromSecurityContext();
+        return ResponseEntity.ok(songService.fetchFavoriteSongs(userFromAuthentication.email()));
     }
 
 }
